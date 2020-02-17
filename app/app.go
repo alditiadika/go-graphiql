@@ -10,9 +10,10 @@ import (
 	typedefs "github.com/alditiadika/go-graphiql/app/graphql/type-defs"
 	"github.com/friendsofgo/graphiql"
 	"github.com/graphql-go/graphql"
+	"github.com/rs/cors"
 )
 
-const port = ":3000"
+const port = ":4000"
 
 //App struct
 type App struct{}
@@ -23,7 +24,9 @@ func (app App) Init() {
 	if err != nil {
 		panic(err)
 	}
-	http.Handle("/graphql", gqlHandler())
+	foo := gqlHandler()
+	handler := cors.Default().Handler(foo)
+	http.Handle("/graphql", handler)
 	http.Handle("/graphiql", graphiqlHandler)
 }
 
@@ -39,7 +42,6 @@ func gqlHandler() http.Handler {
 			http.Error(w, "No query data", 400)
 			return
 		}
-
 		var rBody typedefs.RootType
 		err := json.NewDecoder(r.Body).Decode(&rBody)
 		if err != nil {
