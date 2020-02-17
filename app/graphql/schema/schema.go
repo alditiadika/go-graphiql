@@ -9,8 +9,10 @@ import (
 //InitGraphQLSchema func
 func InitGraphQLSchema() graphql.Schema {
 	rootQuery := graphql.ObjectConfig{Name: "Query", Fields: queryFields}
+	rootMutation := graphql.ObjectConfig{Name: "Mutation", Fields: mutationFields}
 	schemaConfig := graphql.SchemaConfig{
-		Query: graphql.NewObject(rootQuery),
+		Query:    graphql.NewObject(rootQuery),
+		Mutation: graphql.NewObject(rootMutation),
 	}
 	schema, err := graphql.NewSchema(schemaConfig)
 	if err != nil {
@@ -25,4 +27,8 @@ var queryFields = graphql.Fields{
 	"master_users": GetAllUser,
 	"master_user":  GetOneUser,
 }
-var mutationFields = graphql.Fields{}
+var mutationFields = graphql.Fields{
+	"create_master_user":      CreateOneUser,
+	"update_master_user":      UpdateOneUser,
+	"update_many_master_user": UpdateManyUser,
+}

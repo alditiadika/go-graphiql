@@ -10,7 +10,7 @@ import (
 var GetAllUser = &graphql.Field{
 	Type:        graphql.NewList(typedefs.UserSchema),
 	Description: "Get All Users",
-	Args:        typedefs.UserInput(false),
+	Args:        typedefs.GetUserInput(false),
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 		where, _ := params.Args["where"].(map[string]interface{})
 		return resolver.GetUser(where), nil
@@ -19,11 +19,46 @@ var GetAllUser = &graphql.Field{
 
 //GetOneUser field
 var GetOneUser = &graphql.Field{
-	Type:        graphql.NewList(typedefs.UserSchema),
+	Type:        typedefs.UserSchema,
 	Description: "Get One User",
-	Args:        typedefs.UserInput(true),
+	Args:        typedefs.GetUserInput(true),
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 		where, _ := params.Args["where"].(map[string]interface{})
-		return resolver.GetUser(where), nil
+		return resolver.GetOneUser(where), nil
+	},
+}
+
+//CreateOneUser field
+var CreateOneUser = &graphql.Field{
+	Type:        typedefs.UserSchema,
+	Description: "Create One User",
+	Args:        typedefs.CreateUserInput,
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		data, _ := params.Args["data"].(map[string]interface{})
+		return resolver.CreateUser(data), nil
+	},
+}
+
+//UpdateOneUser field
+var UpdateOneUser = &graphql.Field{
+	Type:        typedefs.UserSchema,
+	Description: "Update One User",
+	Args:        typedefs.UpdateOneUserInput,
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		data, _ := params.Args["data"].(map[string]interface{})
+		where, _ := params.Args["where"].(map[string]interface{})
+		return resolver.UpdateOneUser(data, where), nil
+	},
+}
+
+//UpdateManyUser field
+var UpdateManyUser = &graphql.Field{
+	Type:        typedefs.ManyDataAffected,
+	Description: "Update Many User",
+	Args:        typedefs.UpdateManyUserInput,
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		data, _ := params.Args["data"].(map[string]interface{})
+		where, _ := params.Args["where"].(map[string]interface{})
+		return resolver.UpdateManyUser(data, where), nil
 	},
 }

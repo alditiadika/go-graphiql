@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 )
 
 //NumericGenerator function
@@ -25,25 +26,21 @@ func NumericGenerator(field string, value interface{}, operator string) string {
 
 //StringGenerator function
 func StringGenerator(field string, value interface{}, operator string) string {
+	vstr := value.(string)
 	switch operator {
 	case "_contains":
-		return fmt.Sprintf(`and "%s" like '%s' `, field, stringContatter("both", value))
+		return fmt.Sprintf(`and "%s" like '%s' `, field, stringContatter("both", strings.ToUpper(vstr)))
 	case "_not_contains":
-		return fmt.Sprintf(`and "%s" not like '%s' `, field, stringContatter("both", value))
+		return fmt.Sprintf(`and "%s" not like '%s' `, field, stringContatter("both", strings.ToUpper(vstr)))
 	case "_end_with":
-		return fmt.Sprintf(`and "%s" like '%s' `, field, stringContatter("before", value))
+		return fmt.Sprintf(`and "%s" like '%s' `, field, stringContatter("before", strings.ToUpper(vstr)))
 	case "_start_with":
-		return fmt.Sprintf(`and "%s" like '%s' `, field, stringContatter("after", value))
+		return fmt.Sprintf(`and "%s" like '%s' `, field, stringContatter("after", strings.ToUpper(vstr)))
 	default:
-		return fmt.Sprintf(`and "%s" = '%v' `, field, value)
+		return fmt.Sprintf(`and "%s" = '%v' `, field, strings.ToUpper(vstr))
 	}
 }
 
-//DateGenerator function
-// func DateGenerator(field string, value interface{}, operator string) string {
-// 	a, b = time.Parse(databasefield.TimestampzFormat, value.(string))
-// 	return a
-// }
 func stringContatter(condition string, value interface{}) string {
 	switch condition {
 	case "before":
