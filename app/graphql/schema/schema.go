@@ -31,4 +31,6 @@ var mutationFields = graphql.Fields{
 	"create_master_user":      CreateOneUser,
 	"update_master_user":      UpdateOneUser,
 	"update_many_master_user": UpdateManyUser,
+	"delete_master_user":      DeleteUser,
+	"delete_many_user":        DeleteManyUser,
 }

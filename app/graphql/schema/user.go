@@ -10,7 +10,7 @@ import (
 var GetAllUser = &graphql.Field{
 	Type:        graphql.NewList(typedefs.UserSchema),
 	Description: "Get All Users",
-	Args:        typedefs.GetUserInput(false),
+	Args:        typedefs.GetUserInput(false, "Where Input get many master_user ID"),
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 		where, _ := params.Args["where"].(map[string]interface{})
 		return resolver.GetUser(where), nil
@@ -21,7 +21,7 @@ var GetAllUser = &graphql.Field{
 var GetOneUser = &graphql.Field{
 	Type:        typedefs.UserSchema,
 	Description: "Get One User",
-	Args:        typedefs.GetUserInput(true),
+	Args:        typedefs.GetUserInput(true, "Where Input get one master_user ID"),
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 		where, _ := params.Args["where"].(map[string]interface{})
 		return resolver.GetOneUser(where), nil
@@ -60,5 +60,27 @@ var UpdateManyUser = &graphql.Field{
 		data, _ := params.Args["data"].(map[string]interface{})
 		where, _ := params.Args["where"].(map[string]interface{})
 		return resolver.UpdateManyUser(data, where), nil
+	},
+}
+
+//DeleteUser field
+var DeleteUser = &graphql.Field{
+	Type:        typedefs.UserSchema,
+	Description: "Delete One User",
+	Args:        typedefs.GetUserInput(true, "Where Input delete one master_user ID"),
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		where, _ := params.Args["where"].(map[string]interface{})
+		return resolver.DeleteUser(where), nil
+	},
+}
+
+//DeleteManyUser field
+var DeleteManyUser = &graphql.Field{
+	Type:        typedefs.ManyDataAffected,
+	Description: "Delete Many User",
+	Args:        typedefs.GetUserInput(false, "Where Input delete many master_user ID"),
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		where, _ := params.Args["where"].(map[string]interface{})
+		return resolver.DeleteManyUser(where), nil
 	},
 }

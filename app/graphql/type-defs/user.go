@@ -38,13 +38,13 @@ var UserSchema = graphql.NewObject(
 )
 
 //GetUserInput for parameter
-func GetUserInput(isIDRequired bool) graphql.FieldConfigArgument {
+func GetUserInput(isIDRequired bool, desc string) graphql.FieldConfigArgument {
 	if isIDRequired {
 		return graphql.FieldConfigArgument{
 			"where": &graphql.ArgumentConfig{
 				Type: graphql.NewInputObject(
 					graphql.InputObjectConfig{
-						Name: "Where Input get one master_user ID",
+						Name: desc,
 						Fields: graphql.InputObjectConfigFieldMap{
 							"id": &graphql.InputObjectFieldConfig{
 								Type: graphql.NewNonNull(graphql.Int),
@@ -59,7 +59,7 @@ func GetUserInput(isIDRequired bool) graphql.FieldConfigArgument {
 		"where": &graphql.ArgumentConfig{
 			Type: graphql.NewInputObject(
 				graphql.InputObjectConfig{
-					Name: "Where Input get master_user Argument",
+					Name: desc,
 					Fields: graphql.InputObjectConfigFieldMap{
 						//id input
 						"id": &graphql.InputObjectFieldConfig{

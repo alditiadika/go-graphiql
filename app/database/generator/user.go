@@ -227,3 +227,31 @@ func UpdateManyUser(data, cond map[string]interface{}) string {
 	}
 	return fmt.Sprintf(`%s %s = %s %s`, mutation, fieldname, valueField, whereCond)
 }
+
+//DeleteUser function
+func DeleteUser(args map[string]interface{}) string {
+	qs := "delete from master_user where 1=1 "
+	fieldList := dbField.UserFieldList()
+	for key, value := range args {
+		field, operator := utils.OperatorSplitter(fieldList, key)
+		fieldType := dbField.UserFieldType(field)
+
+		switch fieldType {
+		case "numeric":
+			qs += utils.NumericGenerator(field, value, operator)
+			break
+		case "string":
+			qs += utils.StringGenerator(field, value, operator)
+			break
+		case "boolean":
+			qs += fmt.Sprintf(`and "%s" = %v `, field, value)
+			break
+		case "date":
+			qs += utils.NumericGenerator(field, value, operator)
+		default:
+			qs += ""
+			break
+		}
+	}
+	return qs
+}

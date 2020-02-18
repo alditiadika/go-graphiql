@@ -130,7 +130,7 @@ func UpdateManyUser(data, where map[string]interface{}) interface{} {
 	}
 	rAff := typedefs.DataAffected{RowsAffected: rAffected.(int64)}
 	if err != nil {
-		fmt.Println("error when create rows", err)
+		fmt.Println("error when update rows", err)
 		fmt.Println(q)
 		return err
 	}
@@ -139,10 +139,49 @@ func UpdateManyUser(data, where map[string]interface{}) interface{} {
 
 //DeleteUser function
 func DeleteUser(args map[string]interface{}) interface{} {
-	return nil
+	q := generator.GetUserByParam(args)
+	m := generator.DeleteUser(args)
+	rows, err := database.RunQuery(q)
+	if err != nil {
+		fmt.Println("error when run query", err)
+		return models.UserModel{}
+	}
+	_, err = database.RunMutation(m)
+	if err != nil {
+		fmt.Println("error when delete rows", err)
+		fmt.Println(m)
+		return err
+	}
+	item := models.UserModel{}
+	for rows.Next() {
+		rows.Scan(
+			&item.ID,
+			&item.Name,
+			&item.IsActive,
+			&item.CreatedBy,
+			&item.CreatedDate,
+			&item.ModifiedBy,
+			&item.ModifiedDate,
+		)
+	}
+	if item.ID == 0 {
+		return nil
+	}
+	return item
 }
 
 //DeleteManyUser function
 func DeleteManyUser(args map[string]interface{}) interface{} {
-	return nil
+	q := generator.DeleteUser(args)
+	rAffected, err := database.RunMutation(q)
+	if rAffected == nil {
+		rAffected = 0
+	}
+	rAff := typedefs.DataAffected{RowsAffected: rAffected.(int64)}
+	if err != nil {
+		fmt.Println("error when delete rows", err)
+		fmt.Println(q)
+		return err
+	}
+	return rAff
 }
